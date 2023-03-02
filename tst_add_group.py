@@ -22,6 +22,18 @@ class HMTestSaaGroup(unittest.TestCase):
         self.select_group(wd)
         self.logout(wd)
 
+    def test_tst_add_empty_group(self):
+        wd = self.wd
+        self.open_home_page(wd)
+        self.login(wd, username="admin", password="secret")
+        self.open_groups_page(wd)
+        self.init_group_creation(wd)
+        self.fill_group_form(wd, name="", header="", footer="")
+        self.submit_group_creation(wd)
+        self.return_to_groups_page(wd)
+        self.select_group(wd)
+        self.logout(wd)
+
     def logout(self, wd):
         wd.find_element_by_link_text("Logout").click()
 
