@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
-import unittest, time, re
+import unittest
 
 
 class HMTestSaaGroup(unittest.TestCase):
@@ -13,17 +10,31 @@ class HMTestSaaGroup(unittest.TestCase):
         self.wd = webdriver.Chrome(executable_path=r'D:\x5prj\chromedriver.exe')
         self.wd.implicitly_wait(30)
 
-    def test_h_m_test_saa_group(self):
+    def test_tst_add_group(self):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_id("LoginForm").submit()
-        wd.find_element_by_link_text("groups").click()
-        wd.find_element_by_name("new").click()
+        self.open_home_page(wd)
+        self.login(wd)
+        self.open_groups_page(wd)
+        self.init_group_creation(wd)
+        self.fill_group_form(wd)
+        self.submit_group_creation(wd)
+        self.return_to_groups_page(wd)
+        self.select_group(wd)
+        self.logout(wd)
+
+    def logout(self, wd):
+        wd.find_element_by_link_text("Logout").click()
+
+    def select_group(self, wd):
+        wd.find_element_by_name("selected[]").click()
+
+    def return_to_groups_page(self, wd):
+        wd.find_element_by_link_text("group page").click()
+
+    def submit_group_creation(self, wd):
+        wd.find_element_by_name("submit").click()
+
+    def fill_group_form(self, wd):
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
         wd.find_element_by_name("group_name").send_keys("tst_group_name")
@@ -31,10 +42,23 @@ class HMTestSaaGroup(unittest.TestCase):
         wd.find_element_by_name("group_header").send_keys("tst_logo")
         wd.find_element_by_name("group_footer").clear()
         wd.find_element_by_name("group_footer").send_keys("tst_comment")
-        wd.find_element_by_name("submit").click()
-        wd.find_element_by_link_text("group page").click()
-        wd.find_element_by_name("selected[]").click()
-        wd.find_element_by_link_text("Logout").click()
+
+    def init_group_creation(self, wd):
+        wd.find_element_by_name("new").click()
+
+    def open_groups_page(self, wd):
+        wd.find_element_by_link_text("groups").click()
+
+    def login(self, wd):
+        wd.find_element_by_name("user").click()
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_id("LoginForm").submit()
+
+    def open_home_page(self, wd):
+        wd.get("http://localhost/addressbook/")
 
     def is_element_present(self, how, what):
         try:
